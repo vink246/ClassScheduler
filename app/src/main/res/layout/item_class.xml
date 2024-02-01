@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewClassName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textViewInstructor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/textViewClassName"/>
+
+    <TextView
+        android:id="@+id/textViewSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/textViewInstructor"/>
+
+    <TextView
+        android:id="@+id/textViewClassLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/textViewSection"/>
+
+    <TextView
+        android:id="@+id/textViewClassTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/textViewClassLocation"/>
+
+    <TextView
+        android:id="@+id/textViewDaysOfWeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/textViewClassTime"/>
+
+    <ImageView
+        android:id="@+id/imageViewDeleteClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/baseline_delete_24"
+        android:contentDescription="Delete"
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Add Edit Button as ImageView with pencil icon -->
+    <ImageView
+        android:id="@+id/imageViewEditClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewDeleteClass"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="Edit"
+        android:src="@drawable/baseline_edit_24" />
+
+</RelativeLayout>

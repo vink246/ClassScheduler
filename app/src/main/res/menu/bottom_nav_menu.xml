@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/baseline_school_24"
+        android:id="@+id/nav_classes"
+        android:title="@string/classes_title" />
+    <item
+        android:icon="@drawable/baseline_checklist_24"
+        android:id="@+id/nav_todo"
+        android:title="@string/todo_title" />
+    <item
+        android:icon="@drawable/baseline_notifications_24"
+        android:id="@+id/nav_notifications"
+        android:title="@string/notifications_title" />
+</menu>

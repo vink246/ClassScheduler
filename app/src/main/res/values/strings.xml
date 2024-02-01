@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ClassScheduler</string>
+    <string name="classes_title">Classes</string>
+    <string name="todo_title">To-Do</string>
+    <string name="notifications_title">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fab_add_new_class">add new class</string>
+</resources>

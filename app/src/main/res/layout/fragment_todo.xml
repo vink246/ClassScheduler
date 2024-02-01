@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <!-- Spinner for completion filter -->
+    <Spinner
+        android:id="@+id/spinnerCompletionFilter"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_spinner_background"
+        android:popupBackground="@drawable/custom_spinner_dropdown_item"
+        android:padding="8dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerTypeFilter"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Spinner for type filter -->
+    <Spinner
+        android:id="@+id/spinnerTypeFilter"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_spinner_background"
+        android:popupBackground="@drawable/custom_spinner_dropdown_item"
+        android:padding="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintStart_toEndOf="@+id/spinnerCompletionFilter"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerClassFilter"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Spinner for class filter -->
+    <Spinner
+        android:id="@+id/spinnerClassFilter"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_spinner_background"
+        android:popupBackground="@drawable/custom_spinner_dropdown_item"
+        android:padding="8dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@+id/spinnerTypeFilter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- RecyclerView for displaying ToDo items -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewToDo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCompletionFilter" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
