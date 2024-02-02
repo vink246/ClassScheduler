@@ -12,15 +12,18 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.classscheduler.R;
+import com.example.classscheduler.adapters.ClassAdapter;
 import com.example.classscheduler.adapters.ToDoAdapter;
 import com.example.classscheduler.models.Assignment;
 import com.example.classscheduler.models.Exam;
 import com.example.classscheduler.models.ToDoItem;
 import com.example.classscheduler.models.Class;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,6 +50,7 @@ public class ToDoFragment extends Fragment {
         spinnerTypeFilter = view.findViewById(R.id.spinnerTypeFilter);
         spinnerClassFilter = view.findViewById(R.id.spinnerClassFilter);
         recyclerViewToDo = view.findViewById(R.id.recyclerViewToDo);
+        recyclerViewToDo.addItemDecoration(new ClassAdapter.DividerItemDecoration(requireContext()));
 
         // Initialize RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -58,6 +62,18 @@ public class ToDoFragment extends Fragment {
 
         // Initialize and set up the Spinners
         setUpFilterSpinners();
+
+        // Initialize FAB
+        FloatingActionButton fabAddToDo = view.findViewById(R.id.fabAddToDo);
+
+        // Set up FAB click listener
+        fabAddToDo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate to AddToDoActivity when FAB is clicked
+                Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_addToDoActivity);
+            }
+        });
 
         return view;
     }

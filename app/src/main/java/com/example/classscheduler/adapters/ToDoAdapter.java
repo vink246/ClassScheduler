@@ -45,22 +45,26 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
 
         // Bind data to the ViewHolder
         holder.textViewTitle.setText(currentItem.getTitle());
-        holder.textViewDueDate.setText("Due Date: " + currentItem.getDueDate());
 
         String itemType = currentItem.getClass().getSimpleName();
         holder.textViewType.setText("Type: " + itemType);
 
-        // Handle different types of ToDoItems
+        if (itemType.equals("Exam")) {
+            // If the item is an exam, use "On" instead of "Due Date"
+            holder.textViewDueDate.setText("On: " + currentItem.getDueDate());
+        } else {
+            holder.textViewDueDate.setText("Due Date: " + currentItem.getDueDate());
+        }
+
+        // Additional information for each ToDoItem type
         if (currentItem instanceof Assignment) {
-            // Handle assignment-specific logic
-            // For example, you can cast it to Assignment and get assignment-specific properties
             Assignment assignment = (Assignment) currentItem;
-            // Perform actions specific to assignments
+            holder.textViewAssociatedClass.setText("Class: " + assignment.getAssociatedClass());
+            holder.textViewDetails.setText("Details: " + assignment.getDetails());
         } else if (currentItem instanceof Exam) {
-            // Handle exam-specific logic
-            // For example, you can cast it to Exam and get exam-specific properties
             Exam exam = (Exam) currentItem;
-            // Perform actions specific to exams
+            holder.textViewAssociatedClass.setText("Class: " + exam.getAssociatedClass());
+            holder.textViewDetails.setText("Details: " + exam.getDetails());
         }
     }
 
@@ -79,12 +83,16 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         TextView textViewTitle;
         TextView textViewDueDate;
         TextView textViewType;
+        TextView textViewAssociatedClass;
+        TextView textViewDetails;
 
         public ToDoViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewDueDate = itemView.findViewById(R.id.textViewDueDate);
             textViewType = itemView.findViewById(R.id.textViewType);
+            textViewAssociatedClass = itemView.findViewById(R.id.textViewAssociatedClass);
+            textViewDetails = itemView.findViewById(R.id.textViewDetails);
         }
     }
 }
