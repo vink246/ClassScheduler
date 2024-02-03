@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/item_todo.xml -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
@@ -12,30 +11,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_toStartOf="@+id/imageViewDelete" />
 
     <TextView
         android:id="@+id/textViewType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_below="@id/textViewTitle"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/textViewDueDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_below="@id/textViewType"
+        android:layout_marginTop="4dp" />
 
     <TextView
         android:id="@+id/textViewAssociatedClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_below="@id/textViewDueDate"
+        android:layout_marginTop="4dp" />
 
     <TextView
         android:id="@+id/textViewDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_below="@id/textViewAssociatedClass"
+        android:layout_marginTop="4dp" />
 
-</LinearLayout>
+    <!-- Delete Button as ImageView with red trash can icon -->
+
+    <!-- Mark as Finished Button as ImageView with green check mark icon -->
+
+    <ImageView
+        android:id="@+id/imageViewDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/imageViewEdit"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="Delete"
+        android:padding="8dp"
+        android:src="@drawable/baseline_delete_24" />
+
+    <ImageView
+        android:id="@+id/imageViewMarkFinished"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewDelete"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="Mark as Finished"
+        android:src="@drawable/baseline_check_24"
+        /> <!-- Initially set as gone -->
+
+    <!-- Edit Button as ImageView with pencil icon -->
+    <ImageView
+        android:id="@+id/imageViewEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="Edit"
+        android:padding="8dp"
+        android:src="@drawable/baseline_edit_24" />
+
+</RelativeLayout>

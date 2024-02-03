@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.classscheduler.adapters.ToDoAdapter;
 import com.example.classscheduler.models.Assignment;
 import com.example.classscheduler.models.Exam;
 import com.example.classscheduler.models.ToDoItem;
@@ -32,19 +33,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddToDoActivity extends AppCompatActivity {
+public class EditToDoActivity extends AppCompatActivity {
 
     private Spinner spinnerItemType, spinnerAssociatedClass;
     private EditText editTextTitle, editTextDetails;
     private Button btnSubmit, btnCancel, btnOpenDatePicker;
     private TextView textViewDueDate;
     private DatePickerDialog datePickerDialog;
-    private String dueDateString; // Added variable to store the actual date string
+    private String dueDateString;
+    private int toDoPosition;
+    private List<ToDoItem> toDoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_to_do);
+        setContentView(R.layout.activity_edit_to_do);
 
         // Initialize UI elements
         spinnerItemType = findViewById(R.id.spinnerItemType);
@@ -61,12 +64,33 @@ public class AddToDoActivity extends AppCompatActivity {
         // Set up spinners
         setUpSpinners();
 
+        // Retrieve ToDoItem data and position from Intent
+        ToDoItem toDoItem = (ToDoItem) getIntent().getSerializableExtra("toDoDetails");
+        toDoPosition = getIntent().getIntExtra("toDoPosition", -1);
+        toDoList = (List<ToDoItem>) getIntent().getSerializableExtra("toDoList");
+
+        // Pre-fill UI fields with ToDoItem data
+        if (toDoItem != null) {
+            spinnerItemType.setSelection(getIndex(spinnerItemType, toDoItem.getType()));
+            editTextTitle.setText(toDoItem.getTitle());
+            editTextDetails.setText(toDoItem.getDetails());
+            spinnerAssociatedClass.setSelection(getIndex(spinnerAssociatedClass, toDoItem.getAssociatedClass()));
+
+            // Format the due date and set it to the TextView
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            String formattedDueDate = dateFormat.format(toDoItem.getDueDate());
+            textViewDueDate.setText("Due Date: " + formattedDueDate);
+
+            // Store the actual date string
+            dueDateString = formattedDueDate;
+        }
+
         // Set up Submit button click listener
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Handle submit action
-                submitToDoItem();
+                submitEditedToDoItem();
             }
         });
 
@@ -235,6 +259,74 @@ public class AddToDoActivity extends AppCompatActivity {
         finish();
     }
 
+    private void submitEditedToDoItem() {
+        // Implement the logic to gather user input and update ToDoItem
+        String itemType = spinnerItemType.getSelectedItem().toString();
+        String title = editTextTitle.getText().toString();
+        String details = editTextDetails.getText().toString();
+        String associatedClass = spinnerAssociatedClass.getSelectedItem().toString();
+        String dueDateStr = dueDateString;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        Date dueDate;
+
+        try {
+            dueDate = dateFormat.parse(dueDateStr);
+        } catch (ParseException e) {
+            showErrorToast();
+            return;
+        }
+
+        if (title.isEmpty() || details.isEmpty() || associatedClass.isEmpty() || dueDateStr.isEmpty()) {
+            showErrorToast();
+            return;
+        }
+
+        ToDoItem editedToDoItem;
+
+        // Determine the type of ToDoItem and create the appropriate object
+        if ("Assignment".equals(itemType)) {
+            editedToDoItem = new Assignment(title, details, associatedClass, dueDate, false);
+        } else if ("Exam".equals(itemType)) {
+            editedToDoItem = new Exam(title, details, associatedClass, dueDate, false);
+        } else {
+            // Handle other types if needed
+            return;
+        }
+
+        // Update the existing ToDoItem in the list
+        List<ToDoItem> modifiedToDoList = new ArrayList<>(toDoList);
+        if (toDoPosition >= 0 && toDoPosition < modifiedToDoList.size()) {
+            modifiedToDoList.set(toDoPosition, editedToDoItem);
+            // Save the updated list back to SharedPreferences
+            saveToDoItemsToPreferences(modifiedToDoList);
+        }
+
+        // Close the activity
+        finish();
+    }
+
+    private void saveToDoItemsToPreferences(List<ToDoItem> toDoList) {
+        ArrayList<Exam> exams = new ArrayList<>();
+        ArrayList<Assignment> assignments = new ArrayList<>();
+        for (ToDoItem item: toDoList) {
+            if (item.getType().equals("Exam")) {
+                exams.add((Exam) item);
+            } else {
+                assignments.add((Assignment) item);
+            }
+        }
+
+        SharedPreferences preferences = getSharedPreferences("MyToDoItems", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gson = new Gson();
+        String examJson = gson.toJson(exams);
+        String assignmentJson = gson.toJson(assignments);
+        editor.putString("exams", examJson);
+        editor.putString("assignments", assignmentJson);
+        editor.apply();
+    }
+
     private void showErrorToast() {
         Context context = getApplicationContext();
         CharSequence text = "Please fill all fields!";
@@ -279,5 +371,15 @@ public class AddToDoActivity extends AppCompatActivity {
         }
 
         return new ArrayList<>(); // Return an empty list if no assignments are stored yet
+    }
+
+    // Helper method to get the index of an item in a Spinner
+    private int getIndex(Spinner spinner, String value) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
+                return i;
+            }
+        }
+        return 0; // Default to the first item if not found
     }
 }

@@ -1,13 +1,18 @@
 package com.example.classscheduler.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Exam implements ToDoItem {
+public class Exam implements ToDoItem, Serializable {
     private String title;
     private String details;
     private String associatedClass;
     private Date dueDate;
     private boolean completed;
+
+    // Default constructor
+    public Exam() {
+    }
 
     public Exam(String title, String details, String associatedClass, Date dueDate, boolean completed) {
         this.title = title;
@@ -66,5 +71,11 @@ public class Exam implements ToDoItem {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+
+    @Override
+    public String getType() {
+        return "Exam";
+    }
+
 }
 

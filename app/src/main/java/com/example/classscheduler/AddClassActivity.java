@@ -99,15 +99,6 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         String classLocation = editTextClassLocation.getText().toString();
         String classTime = editTextClassTime.getText().toString();
 
-        if (className.length()*instructor.length()*classSection.length()*classLocation.length()*classTime.length() == 0) {
-            Context context = getApplicationContext();
-            CharSequence text = "Please fill all fields!";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            return;
-        }
-
         // Convert the set of selected days to an ArrayList
         ArrayList<String> daysOfWeek = new ArrayList<>();
         if (checkBoxMonday.isChecked()) daysOfWeek.add("Monday");
@@ -115,6 +106,15 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         if (checkBoxWednesday.isChecked()) daysOfWeek.add("Wednesday");
         if (checkBoxThursday.isChecked()) daysOfWeek.add("Thursday");
         if (checkBoxFriday.isChecked()) daysOfWeek.add("Friday");
+
+        if (className.length()*instructor.length()*classSection.length()*classLocation.length()*classTime.length()*daysOfWeek.size() == 0) {
+            Context context = getApplicationContext();
+            CharSequence text = "Please fill all fields!";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            return;
+        }
 
         // Create a Class object
         Class newClass = new Class(className, instructor, classSection, classLocation, classTime, daysOfWeek);

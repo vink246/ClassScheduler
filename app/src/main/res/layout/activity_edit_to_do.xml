@@ -1,4 +1,5 @@
-<!-- res/layout/activity_add_to_do.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_edit_to_do.xml -->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"

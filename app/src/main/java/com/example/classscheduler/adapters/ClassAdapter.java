@@ -48,7 +48,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         Class currentClass = classList.get(position);
 
         // Bind data to the ViewHolder
-        holder.textViewClassName.setText("Class: " + currentClass.getClassName());
+        holder.textViewClassName.setText(currentClass.getClassName());
         holder.textViewInstructor.setText("Instructor: " + currentClass.getInstructor());
         holder.textViewSection.setText("Section: " + currentClass.getClassSection());
         holder.textViewClassLocation.setText("Location: " + currentClass.getClassLocation());

@@ -1,35 +1,48 @@
 package com.example.classscheduler.adapters;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.classscheduler.EditClassActivity;
+import com.example.classscheduler.EditToDoActivity;
 import com.example.classscheduler.R;
 import com.example.classscheduler.models.Assignment;
 import com.example.classscheduler.models.Exam;
 import com.example.classscheduler.models.ToDoItem;
+import com.google.gson.Gson;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder> {
 
     private List<ToDoItem> toDoList;
     private Context context;
+    private ToDoItemListener listener; // New listener variable
 
-    // Add any additional properties or methods as needed
-
-    public ToDoAdapter(Context context, List<ToDoItem> toDoList) {
+    public ToDoAdapter(Context context, List<ToDoItem> toDoList, ToDoItemListener listener) {
         this.context = context;
         this.toDoList = toDoList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,29 +56,83 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
     public void onBindViewHolder(@NonNull ToDoViewHolder holder, int position) {
         ToDoItem currentItem = toDoList.get(position);
 
-        // Bind data to the ViewHolder
-        holder.textViewTitle.setText(currentItem.getTitle());
+        // Check if currentItem is not null before accessing its properties
+        if (currentItem != null) {
+            holder.textViewTitle.setText(currentItem.getTitle());
 
-        String itemType = currentItem.getClass().getSimpleName();
-        holder.textViewType.setText("Type: " + itemType);
+            String itemType = currentItem.getClass().getSimpleName();
+            holder.textViewType.setText("Type: " + itemType);
 
-        if (itemType.equals("Exam")) {
-            // If the item is an exam, use "On" instead of "Due Date"
-            holder.textViewDueDate.setText("On: " + currentItem.getDueDate());
+            if (itemType.equals("Exam")) {
+                // If the item is an exam, use "On" instead of "Due Date"
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                String formattedDueDate = dateFormat.format(currentItem.getDueDate());
+                holder.textViewDueDate.setText("On: " + formattedDueDate);
+            } else {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                String formattedDueDate = dateFormat.format(currentItem.getDueDate());
+                holder.textViewDueDate.setText("Due Date: " + formattedDueDate);
+            }
+
+            if (currentItem.isCompleted()) {
+                holder.imageViewMarkFinished.setVisibility(View.GONE);
+                holder.textViewTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                holder.imageViewMarkFinished.setVisibility(View.VISIBLE);
+                holder.textViewTitle.setPaintFlags(0);
+            }
+
+            // Additional information for each ToDoItem type
+            if (currentItem instanceof Assignment) {
+                Assignment assignment = (Assignment) currentItem;
+                holder.textViewAssociatedClass.setText("Class: " + assignment.getAssociatedClass());
+                holder.textViewDetails.setText("Details: " + assignment.getDetails());
+            } else if (currentItem instanceof Exam) {
+                Exam exam = (Exam) currentItem;
+                holder.textViewAssociatedClass.setText("Class: " + exam.getAssociatedClass());
+                holder.textViewDetails.setText("Details: " + exam.getDetails());
+            }
         } else {
-            holder.textViewDueDate.setText("Due Date: " + currentItem.getDueDate());
+            // Handle the case where currentItem is null (optional)
+            holder.textViewTitle.setText("N/A");
+            holder.textViewType.setText("Type: N/A");
+            holder.textViewDueDate.setText("Due Date: N/A");
+            holder.textViewAssociatedClass.setText("Class: N/A");
+            holder.textViewDetails.setText("Details: N/A");
         }
 
-        // Additional information for each ToDoItem type
-        if (currentItem instanceof Assignment) {
-            Assignment assignment = (Assignment) currentItem;
-            holder.textViewAssociatedClass.setText("Class: " + assignment.getAssociatedClass());
-            holder.textViewDetails.setText("Details: " + assignment.getDetails());
-        } else if (currentItem instanceof Exam) {
-            Exam exam = (Exam) currentItem;
-            holder.textViewAssociatedClass.setText("Class: " + exam.getAssociatedClass());
-            holder.textViewDetails.setText("Details: " + exam.getDetails());
-        }
+        holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Use the listener to handle the delete action
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onDeleteClicked(adapterPosition, holder.textViewType.getText().toString());
+                }
+            }
+        });
+
+        holder.imageViewEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Use the listener to handle the edit action
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onEditClicked(adapterPosition);
+                }
+            }
+        });
+
+        holder.imageViewMarkFinished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Use the listener to handle the mark finished action
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onMarkFinishedClicked(adapterPosition);
+                }
+            }
+        });
     }
 
     @Override
@@ -76,7 +143,22 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
     public void setToDoList(List<ToDoItem> updatedList) {
         // Update the dataset and notify the adapter
         toDoList = updatedList;
+
+        // Sort the toDoList based on due dates (ascending order)
+        Collections.sort(toDoList, new Comparator<ToDoItem>() {
+            @Override
+            public int compare(ToDoItem item1, ToDoItem item2) {
+                return item1.getDueDate().compareTo(item2.getDueDate());
+            }
+        });
+
         notifyDataSetChanged();
+    }
+
+    public interface ToDoItemListener {
+        void onDeleteClicked(int position, String type);
+        void onEditClicked(int position);
+        void onMarkFinishedClicked(int position);
     }
 
     public static class ToDoViewHolder extends RecyclerView.ViewHolder {
@@ -85,6 +167,9 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         TextView textViewType;
         TextView textViewAssociatedClass;
         TextView textViewDetails;
+        ImageView imageViewDelete;
+        ImageView imageViewEdit;
+        ImageView imageViewMarkFinished;
 
         public ToDoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +178,9 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
             textViewType = itemView.findViewById(R.id.textViewType);
             textViewAssociatedClass = itemView.findViewById(R.id.textViewAssociatedClass);
             textViewDetails = itemView.findViewById(R.id.textViewDetails);
+            imageViewDelete = itemView.findViewById(R.id.imageViewDelete);
+            imageViewEdit = itemView.findViewById(R.id.imageViewEdit);
+            imageViewMarkFinished = itemView.findViewById(R.id.imageViewMarkFinished);
         }
     }
 }
