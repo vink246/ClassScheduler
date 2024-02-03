@@ -288,7 +288,7 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
     @Override
     public void onMarkFinishedClicked(int position) {
         // Handle the mark finished action
-        markFinishedToDoItem(position);
+        showCompleteConfirmationDialog(position);
     }
 
     private void deleteToDoItem(int position) {
@@ -353,6 +353,23 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked Yes, proceed with deletion
                         deleteToDoItem(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked No, do nothing
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void showCompleteConfirmationDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure you want to mark this item as finished?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked Yes, proceed with deletion
+                        markFinishedToDoItem(position);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
