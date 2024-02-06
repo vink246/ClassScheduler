@@ -33,6 +33,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Activity for editing and updating ToDo items.
+ */
 public class EditToDoActivity extends AppCompatActivity {
 
     private Spinner spinnerItemType, spinnerAssociatedClass;
@@ -113,6 +116,9 @@ public class EditToDoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set up spinner UI elements.
+     */
     private void setUpSpinners() {
         // Set up Spinner for ToDoItem type
         List<String> itemTypes = Arrays.asList("Assignment", "Exam");
@@ -136,6 +142,11 @@ public class EditToDoActivity extends AppCompatActivity {
         classAdapter.addAll(loadClassesFromPreferences());
     }
 
+    /**
+     * Load class names from SharedPreferences.
+     *
+     * @return List of class names.
+     */
     private List<String> loadClassesFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyClasses", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -157,6 +168,9 @@ public class EditToDoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show DatePicker dialog.
+     */
     private void showDatePickerDialog() {
         // Get current date
         Calendar calendar = Calendar.getInstance();
@@ -183,6 +197,11 @@ public class EditToDoActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * Save Assignment to SharedPreferences.
+     *
+     * @param assignment The Assignment object to be saved.
+     */
     private void saveAssignmentToPreferences(Assignment assignment) {
         // Retrieve existing Assignments from SharedPreferences
         List<Assignment> existingAssignments = loadAssignmentsFromPreferences();
@@ -199,6 +218,11 @@ public class EditToDoActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Save Exam to SharedPreferences.
+     *
+     * @param exam The Exam object to be saved.
+     */
     private void saveExamToPreferences(Exam exam) {
         // Retrieve existing Exams from SharedPreferences
         List<Exam> existingExams = loadExamsFromPreferences();
@@ -215,6 +239,9 @@ public class EditToDoActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Handle the submission of a ToDo item.
+     */
     private void submitToDoItem() {
         // Implement the logic to gather user input and store ToDoItem
         String itemType = spinnerItemType.getSelectedItem().toString();
@@ -235,7 +262,7 @@ public class EditToDoActivity extends AppCompatActivity {
             return;
         }
 
-        if (title.length()*itemType.length()*details.length()*associatedClass.length()*dueDateStr.length() == 0) {
+        if (title.length() * itemType.length() * details.length() * associatedClass.length() * dueDateStr.length() == 0) {
             showErrorToast();
             return;
         }
@@ -259,6 +286,9 @@ public class EditToDoActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Handle the submission of an edited ToDo item.
+     */
     private void submitEditedToDoItem() {
         // Implement the logic to gather user input and update ToDoItem
         String itemType = spinnerItemType.getSelectedItem().toString();
@@ -306,10 +336,15 @@ public class EditToDoActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Save ToDo items to SharedPreferences.
+     *
+     * @param toDoList List of ToDo items to be saved.
+     */
     private void saveToDoItemsToPreferences(List<ToDoItem> toDoList) {
         ArrayList<Exam> exams = new ArrayList<>();
         ArrayList<Assignment> assignments = new ArrayList<>();
-        for (ToDoItem item: toDoList) {
+        for (ToDoItem item : toDoList) {
             if (item.getType().equals("Exam")) {
                 exams.add((Exam) item);
             } else {
@@ -327,6 +362,9 @@ public class EditToDoActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Display an error toast message.
+     */
     private void showErrorToast() {
         Context context = getApplicationContext();
         CharSequence text = "Please fill all fields!";
@@ -335,6 +373,11 @@ public class EditToDoActivity extends AppCompatActivity {
         toast.show();
     }
 
+    /**
+     * Load exams from SharedPreferences.
+     *
+     * @return List of exams.
+     */
     private List<Exam> loadExamsFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -354,6 +397,11 @@ public class EditToDoActivity extends AppCompatActivity {
         return new ArrayList<>(); // Return an empty list if no exams are stored yet
     }
 
+    /**
+     * Load assignments from SharedPreferences.
+     *
+     * @return List of assignments.
+     */
     private List<Assignment> loadAssignmentsFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -373,7 +421,13 @@ public class EditToDoActivity extends AppCompatActivity {
         return new ArrayList<>(); // Return an empty list if no assignments are stored yet
     }
 
-    // Helper method to get the index of an item in a Spinner
+    /**
+     * Helper method to get the index of an item in a Spinner.
+     *
+     * @param spinner The Spinner view.
+     * @param value   The value to search for.
+     * @return Index of the item in the Spinner.
+     */
     private int getIndex(Spinner spinner, String value) {
         for (int i = 0; i < spinner.getCount(); i++) {
             if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {

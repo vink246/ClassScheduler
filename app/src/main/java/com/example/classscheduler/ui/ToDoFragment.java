@@ -34,11 +34,15 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/**
+ * Fragment for managing to-do items, including assignments and exams.
+ */
 public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListener {
 
     private Spinner spinnerCompletionFilter;
@@ -100,6 +104,9 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         toDoAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Set up filter spinners for completion, type, and class.
+     */
     private void setUpFilterSpinners() {
         // Set up completion filter
         String[] completionFilterOptions = {"All", "Completed", "Unfinished"};
@@ -154,6 +161,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         });
     }
 
+    /**
+     * Load class names from SharedPreferences.
+     *
+     * @return List of class names.
+     */
     private List<String> loadClassesFromPreferences() {
         SharedPreferences preferences = getContext().getSharedPreferences("MyClasses", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -178,6 +190,9 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         return new ArrayList<>(); // Return an empty list if no classes are stored yet
     }
 
+    /**
+     * Update the to-do list based on the selected filters.
+     */
     private void updateToDoList() {
         // Load ToDoItems based on selected filters
         List<ToDoItem> filteredToDoItems = loadFilteredToDoItems();
@@ -189,6 +204,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         toDoAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Load exams from SharedPreferences.
+     *
+     * @return List of exams.
+     */
     private List<Exam> loadExamsFromPreferences() {
         SharedPreferences preferences = getContext().getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -201,13 +221,17 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
                 return gson.fromJson(json, new TypeToken<List<Exam>>() {}.getType());
             } catch (JsonSyntaxException e) {
                 e.printStackTrace(); // Log or handle the exception appropriately
-                System.out.println("DEBUG: JsonSyntaxException during exam deserialization.");
             }
         }
 
         return new ArrayList<>(); // Return an empty list if no exams are stored yet
     }
 
+    /**
+     * Load assignments from SharedPreferences.
+     *
+     * @return List of assignments.
+     */
     private List<Assignment> loadAssignmentsFromPreferences() {
         SharedPreferences preferences = getContext().getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -220,13 +244,17 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
                 return gson.fromJson(json, new TypeToken<List<Assignment>>() {}.getType());
             } catch (JsonSyntaxException e) {
                 e.printStackTrace(); // Log or handle the exception appropriately
-                System.out.println("DEBUG: JsonSyntaxException during assignment deserialization.");
             }
         }
 
         return new ArrayList<>(); // Return an empty list if no assignments are stored yet
     }
 
+    /**
+     * Load filtered to-do items based on selected filters.
+     *
+     * @return List of filtered to-do items.
+     */
     private List<ToDoItem> loadFilteredToDoItems() {
         // Load all Exams and Assignments from SharedPreferences
         List<Exam> allExams = loadExamsFromPreferences();
@@ -259,10 +287,24 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
             }
         }
 
+        // Sort the toDoList based on due dates (ascending order)
+        Collections.sort(filteredToDoItems, new Comparator<ToDoItem>() {
+            @Override
+            public int compare(ToDoItem item1, ToDoItem item2) {
+                return item1.getDueDate().compareTo(item2.getDueDate());
+            }
+        });
+
         return filteredToDoItems;
     }
 
-    // Helper method to get the index of an item in a Spinner
+    /**
+     * Get the index of a specific value in a Spinner.
+     *
+     * @param spinner Spinner widget.
+     * @param value   Value to find in the Spinner.
+     * @return Index of the value in the Spinner.
+     */
     private int getIndex(Spinner spinner, String value) {
         for (int i = 0; i < spinner.getCount(); i++) {
             if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
@@ -291,6 +333,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         showCompleteConfirmationDialog(position);
     }
 
+    /**
+     * Delete a to-do item at the specified position.
+     *
+     * @param position Position of the to-do item in the list.
+     */
     private void deleteToDoItem(int position) {
         saveCurrentState();
         // Handle the action to delete the class at the given position
@@ -301,6 +348,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         restoreState();
     }
 
+    /**
+     * Edit a to-do item at the specified position.
+     *
+     * @param position Position of the to-do item in the list.
+     */
     private void editToDoItem(int position) {
         saveCurrentState();
         ToDoItem selectedItem = toDoList.get(position);
@@ -318,6 +370,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         restoreState();
     }
 
+    /**
+     * Mark a to-do item as finished at the specified position.
+     *
+     * @param position Position of the to-do item in the list.
+     */
     private void markFinishedToDoItem(int position) {
         saveCurrentState();
         toDoList.get(position).setCompleted(true);
@@ -325,10 +382,13 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         restoreState();
     }
 
+    /**
+     * Save to-do items to SharedPreferences.
+     */
     private void saveToDoItemsToPreferences() {
         ArrayList<Exam> exams = new ArrayList<>();
         ArrayList<Assignment> assignments = new ArrayList<>();
-        for (ToDoItem item: toDoList) {
+        for (ToDoItem item : toDoList) {
             if (item.getType().equals("Exam")) {
                 exams.add((Exam) item);
             } else {
@@ -346,9 +406,15 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         editor.apply();
     }
 
+    /**
+     * Show a dialog for confirming deletion of a to-do item.
+     *
+     * @param position Position of the to-do item in the list.
+     * @param type     Type of the to-do item (Assignment or Exam).
+     */
     private void showDeleteConfirmationDialog(int position, String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(String.format("Are you sure you want to delete this %s?", type))
+        builder.setMessage(String.format("Are you sure you want to delete this %s?", type.substring(6)))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked Yes, proceed with deletion
@@ -363,6 +429,11 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         builder.create().show();
     }
 
+    /**
+     * Show a dialog for confirming marking a to-do item as finished.
+     *
+     * @param position Position of the to-do item in the list.
+     */
     private void showCompleteConfirmationDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Are you sure you want to mark this item as finished?")
@@ -380,6 +451,9 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         builder.create().show();
     }
 
+    /**
+     * Save the current state of spinner selections for later restoration.
+     */
     private void saveCurrentState() {
         tempClass = spinnerClassFilter.getSelectedItemPosition();
         tempCompletion = spinnerCompletionFilter.getSelectedItemPosition();
@@ -390,6 +464,9 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         updateToDoList();
     }
 
+    /**
+     * Restore the spinner selections to their previous state.
+     */
     private void restoreState() {
         spinnerClassFilter.setSelection(tempClass);
         spinnerCompletionFilter.setSelection(tempCompletion);
@@ -397,4 +474,3 @@ public class ToDoFragment extends Fragment implements ToDoAdapter.ToDoItemListen
         updateToDoList();
     }
 }
-

@@ -32,6 +32,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Activity for adding a new to-do item (Assignment or Exam).
+ */
 public class AddToDoActivity extends AppCompatActivity {
 
     private Spinner spinnerItemType, spinnerAssociatedClass;
@@ -89,6 +92,9 @@ public class AddToDoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set up Spinners for item type and associated class.
+     */
     private void setUpSpinners() {
         // Set up Spinner for ToDoItem type
         List<String> itemTypes = Arrays.asList("Assignment", "Exam");
@@ -112,6 +118,11 @@ public class AddToDoActivity extends AppCompatActivity {
         classAdapter.addAll(loadClassesFromPreferences());
     }
 
+    /**
+     * Load class names from SharedPreferences to populate the associated class spinner.
+     *
+     * @return List of class names.
+     */
     private List<String> loadClassesFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyClasses", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -133,6 +144,9 @@ public class AddToDoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show the DatePicker dialog.
+     */
     private void showDatePickerDialog() {
         // Get current date
         Calendar calendar = Calendar.getInstance();
@@ -159,6 +173,11 @@ public class AddToDoActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * Save an Assignment to SharedPreferences.
+     *
+     * @param assignment The Assignment to be saved.
+     */
     private void saveAssignmentToPreferences(Assignment assignment) {
         // Retrieve existing Assignments from SharedPreferences
         List<Assignment> existingAssignments = loadAssignmentsFromPreferences();
@@ -175,6 +194,11 @@ public class AddToDoActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Save an Exam to SharedPreferences.
+     *
+     * @param exam The Exam to be saved.
+     */
     private void saveExamToPreferences(Exam exam) {
         // Retrieve existing Exams from SharedPreferences
         List<Exam> existingExams = loadExamsFromPreferences();
@@ -191,6 +215,9 @@ public class AddToDoActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Submit the new to-do item based on user input.
+     */
     private void submitToDoItem() {
         // Implement the logic to gather user input and store ToDoItem
         String itemType = spinnerItemType.getSelectedItem().toString();
@@ -211,7 +238,7 @@ public class AddToDoActivity extends AppCompatActivity {
             return;
         }
 
-        if (title.length()*itemType.length()*details.length()*associatedClass.length()*dueDateStr.length() == 0) {
+        if (title.length() * itemType.length() * details.length() * associatedClass.length() * dueDateStr.length() == 0) {
             showErrorToast();
             return;
         }
@@ -235,6 +262,9 @@ public class AddToDoActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Show an error toast for incomplete input.
+     */
     private void showErrorToast() {
         Context context = getApplicationContext();
         CharSequence text = "Please fill all fields!";
@@ -243,6 +273,11 @@ public class AddToDoActivity extends AppCompatActivity {
         toast.show();
     }
 
+    /**
+     * Load Exams from SharedPreferences.
+     *
+     * @return List of loaded Exams.
+     */
     private List<Exam> loadExamsFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -262,6 +297,11 @@ public class AddToDoActivity extends AppCompatActivity {
         return new ArrayList<>(); // Return an empty list if no exams are stored yet
     }
 
+    /**
+     * Load Assignments from SharedPreferences.
+     *
+     * @return List of loaded Assignments.
+     */
     private List<Assignment> loadAssignmentsFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("MyToDoItems", MODE_PRIVATE);
         Gson gson = new Gson();

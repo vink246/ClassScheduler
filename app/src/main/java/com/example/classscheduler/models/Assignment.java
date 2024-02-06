@@ -3,7 +3,11 @@ package com.example.classscheduler.models;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Represents an assignment as a ToDoItem.
+ */
 public class Assignment implements ToDoItem, Serializable {
+
     private String title;
     private String details;
     private String associatedClass;
@@ -14,6 +18,15 @@ public class Assignment implements ToDoItem, Serializable {
     public Assignment() {
     }
 
+    /**
+     * Constructs an Assignment with specified details.
+     *
+     * @param title           The title of the assignment.
+     * @param details         Additional details of the assignment.
+     * @param associatedClass The class associated with the assignment.
+     * @param dueDate         The due date of the assignment.
+     * @param completed       Indicates whether the assignment is completed.
+     */
     public Assignment(String title, String details, String associatedClass, Date dueDate, boolean completed) {
         this.title = title;
         this.details = details;
@@ -76,5 +89,4 @@ public class Assignment implements ToDoItem, Serializable {
     public String getType() {
         return "Assignment";
     }
-
 }

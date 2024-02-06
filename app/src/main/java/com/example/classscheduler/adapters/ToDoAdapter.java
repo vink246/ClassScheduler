@@ -1,11 +1,6 @@
 package com.example.classscheduler.adapters;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,31 +9,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.classscheduler.EditClassActivity;
-import com.example.classscheduler.EditToDoActivity;
 import com.example.classscheduler.R;
 import com.example.classscheduler.models.Assignment;
 import com.example.classscheduler.models.Exam;
 import com.example.classscheduler.models.ToDoItem;
-import com.google.gson.Gson;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter for displaying ToDoItems in a RecyclerView.
+ */
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder> {
 
     private List<ToDoItem> toDoList;
     private Context context;
     private ToDoItemListener listener; // New listener variable
 
+    /**
+     * Constructor for ToDoAdapter.
+     *
+     * @param context  The context in which the adapter is created.
+     * @param toDoList The list of ToDoItems to be displayed.
+     * @param listener The listener for handling actions on ToDoItems.
+     */
     public ToDoAdapter(Context context, List<ToDoItem> toDoList, ToDoItemListener listener) {
         this.context = context;
         this.toDoList = toDoList;
@@ -140,27 +139,32 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         return toDoList.size();
     }
 
+    /**
+     * Sets the updated list of ToDoItems and notifies the adapter.
+     *
+     * @param updatedList The updated list of ToDoItems.
+     */
     public void setToDoList(List<ToDoItem> updatedList) {
         // Update the dataset and notify the adapter
         toDoList = updatedList;
 
-        // Sort the toDoList based on due dates (ascending order)
-        Collections.sort(toDoList, new Comparator<ToDoItem>() {
-            @Override
-            public int compare(ToDoItem item1, ToDoItem item2) {
-                return item1.getDueDate().compareTo(item2.getDueDate());
-            }
-        });
-
         notifyDataSetChanged();
     }
 
+    /**
+     * Interface for handling actions on ToDoItems.
+     */
     public interface ToDoItemListener {
         void onDeleteClicked(int position, String type);
+
         void onEditClicked(int position);
+
         void onMarkFinishedClicked(int position);
     }
 
+    /**
+     * ViewHolder for holding views of individual ToDoItems in the RecyclerView.
+     */
     public static class ToDoViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         TextView textViewDueDate;
@@ -171,6 +175,11 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         ImageView imageViewEdit;
         ImageView imageViewMarkFinished;
 
+        /**
+         * Constructor for ToDoViewHolder.
+         *
+         * @param itemView The view representing an individual ToDoItem.
+         */
         public ToDoViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);

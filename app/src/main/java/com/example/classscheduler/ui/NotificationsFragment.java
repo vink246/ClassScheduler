@@ -10,18 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-
 import androidx.fragment.app.Fragment;
-
 import com.example.classscheduler.R;
-
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link NotificationsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment for managing notifications settings.
  */
 public class NotificationsFragment extends Fragment {
 
@@ -33,8 +28,8 @@ public class NotificationsFragment extends Fragment {
     private Spinner assignmentNotificationSpinner;
     private Spinner examNotificationSpinner;
 
-    private SharedPreferences classPreferences; // Assuming you have this
-    private SharedPreferences assignmentsAndExamsPreferences; // Assuming you have this
+    private SharedPreferences classPreferences;
+    private SharedPreferences assignmentsAndExamsPreferences;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -66,6 +61,9 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Set up switch listeners.
+     */
     private void setupSwitches() {
         classNotificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -89,6 +87,9 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+    /**
+     * Set up spinner adapters.
+     */
     private void setupSpinners() {
         ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
@@ -102,69 +103,74 @@ public class NotificationsFragment extends Fragment {
         examNotificationSpinner.setAdapter(timeAdapter);
     }
 
+    /**
+     * Handle notification switch change.
+     *
+     * @param isChecked  Whether the switch is checked.
+     * @param spinner    The associated spinner.
+     * @param preferences The SharedPreferences for the switch.
+     */
     private void handleNotificationSwitchChange(boolean isChecked, Spinner spinner, SharedPreferences preferences) {
         if (isChecked) {
-            // Schedule notification based on the selected time in the spinner
             int selectedTime = spinner.getSelectedItemPosition();
-
-            // Use the selected time to set up the notification schedule
-            // For simplicity, let's assume you have a method to schedule notifications
             scheduleNotification(selectedTime, preferences);
         } else {
-            // Cancel or remove the scheduled notification
-            // Implement logic to cancel or remove the notification based on your requirements
             cancelNotification(preferences);
         }
     }
 
+    /**
+     * Schedule a notification based on the selected time.
+     *
+     * @param selectedTime The selected time index.
+     * @param preferences  The SharedPreferences for the switch.
+     */
     private void scheduleNotification(int selectedTime, SharedPreferences preferences) {
-        // Retrieve the due date from SharedPreferences (assuming it's stored as a long timestamp)
         long dueDateTimestamp = preferences.getLong("due_date", 0);
         Date dueDate = new Date(dueDateTimestamp);
 
-        // Calculate the notification time by subtracting the selected time
         Calendar notificationTime = Calendar.getInstance();
         notificationTime.setTime(dueDate);
 
         switch (selectedTime) {
-            case 5:
+            case 0:
                 notificationTime.add(Calendar.MINUTE, -5);
                 break;
-            case 15:
+            case 1:
                 notificationTime.add(Calendar.MINUTE, -15);
                 break;
-            case 30:
+            case 2:
                 notificationTime.add(Calendar.MINUTE, -30);
                 break;
-            case 60:
+            case 3:
                 notificationTime.add(Calendar.HOUR_OF_DAY, -1);
                 break;
-            case 120:
+            case 4:
                 notificationTime.add(Calendar.HOUR_OF_DAY, -2);
                 break;
-            case 1440:
+            case 5:
                 notificationTime.add(Calendar.DAY_OF_YEAR, -1);
                 break;
-            case 2880:
+            case 6:
                 notificationTime.add(Calendar.DAY_OF_YEAR, -2);
                 break;
             // Add more cases as needed
         }
 
-        // Now, 'notificationTime' represents the calculated notification time
-
         // Implement the logic to schedule the notification using 'notificationTime'
-        // You can use AlarmManager or other scheduling mechanisms
-
         // Save the selected time in SharedPreferences if needed
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("notification_time", selectedTime);
         editor.apply();
     }
 
+    /**
+     * Cancel a scheduled notification.
+     *
+     * @param preferences The SharedPreferences for the switch.
+     */
     private void cancelNotification(SharedPreferences preferences) {
         // Implement the logic to cancel or remove the scheduled notification
-        // You can use AlarmManager or other mechanisms
         // Remove the saved notification time from SharedPreferences if needed
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("notification_time");
