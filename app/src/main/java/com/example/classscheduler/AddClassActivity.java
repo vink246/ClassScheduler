@@ -2,6 +2,7 @@ package com.example.classscheduler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
+/**
+ * Activity for adding a new class.
+ */
 public class AddClassActivity extends AppCompatActivity implements TimePickerListener {
 
     private EditText editTextClassName;
@@ -66,19 +70,33 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         getWindow().setStatusBarColor(android.graphics.Color.parseColor("#673AB7"));
     }
 
-    // Method to handle "Cancel" button click
+    /**
+     * Handles "Cancel" button click.
+     *
+     * @param v The view that was clicked.
+     */
     public void cancel(View v) {
         // Handle the action to perform when the "Cancel" button is clicked
         finish(); // This will close the activity and go back
     }
 
-    // Method to show the Time Picker dialog
+    /**
+     * Shows the Time Picker dialog.
+     *
+     * @param v The view that was clicked.
+     */
     public void showTimePickerDialog(View v) {
         DialogFragment timePickerFragment = new TimePickerFragment(this);
         timePickerFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    // Callback from TimePickerFragment
+    /**
+     * Callback from TimePickerFragment.
+     *
+     * @param view      The TimePicker view.
+     * @param hourOfDay The selected hour.
+     * @param minute    The selected minute.
+     */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Format the selected time and set it to the EditText
         Calendar calendar = Calendar.getInstance();
@@ -91,6 +109,9 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         editTextClassTime.setText(selectedTime);
     }
 
+    /**
+     * Saves the class details to SharedPreferences.
+     */
     private void saveClassDetails() {
         // Get entered class details
         String className = editTextClassName.getText().toString();
@@ -99,15 +120,6 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         String classLocation = editTextClassLocation.getText().toString();
         String classTime = editTextClassTime.getText().toString();
 
-        if (className.length()*instructor.length()*classSection.length()*classLocation.length()*classTime.length() == 0) {
-            Context context = getApplicationContext();
-            CharSequence text = "Please fill all fields!";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            return;
-        }
-
         // Convert the set of selected days to an ArrayList
         ArrayList<String> daysOfWeek = new ArrayList<>();
         if (checkBoxMonday.isChecked()) daysOfWeek.add("Monday");
@@ -115,6 +127,16 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         if (checkBoxWednesday.isChecked()) daysOfWeek.add("Wednesday");
         if (checkBoxThursday.isChecked()) daysOfWeek.add("Thursday");
         if (checkBoxFriday.isChecked()) daysOfWeek.add("Friday");
+
+        // Validate input fields
+        if (className.length() * instructor.length() * classSection.length() * classLocation.length() * classTime.length() * daysOfWeek.size() == 0) {
+            Context context = getApplicationContext();
+            CharSequence text = "Please fill all fields!";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            return;
+        }
 
         // Create a Class object
         Class newClass = new Class(className, instructor, classSection, classLocation, classTime, daysOfWeek);
@@ -126,6 +148,11 @@ public class AddClassActivity extends AppCompatActivity implements TimePickerLis
         finish();
     }
 
+    /**
+     * Saves the class to SharedPreferences.
+     *
+     * @param newClass The new class to be saved.
+     */
     private void saveClassToSharedPreferences(Class newClass) {
         // Get the existing classes from SharedPreferences
         SharedPreferences preferences = getSharedPreferences("MyClasses", MODE_PRIVATE);

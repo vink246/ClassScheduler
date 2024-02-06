@@ -27,7 +27,17 @@
         android:id="@+id/nav_todo"
         android:name="com.example.classscheduler.ui.ToDoFragment"
         android:label="@string/todo_title"
-        tools:layout="@layout/fragment_todo" />
+        tools:layout="@layout/fragment_todo" >
+        <action
+            android:id="@+id/action_toDoFragment_to_addToDoActivity"
+            app:destination="@id/nav_add_todo" />
+    </fragment>
+
+    <activity
+        android:id="@+id/nav_add_todo"
+        android:name="com.example.classscheduler.AddToDoActivity"
+        android:label="Add To-Do Task"
+        tools:layout="@layout/activity_add_to_do" />
 
     <fragment
         android:id="@+id/nav_notifications"

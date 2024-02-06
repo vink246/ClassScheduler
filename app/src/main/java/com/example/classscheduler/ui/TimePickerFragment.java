@@ -9,15 +9,23 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.classscheduler.AddClassActivity;
 import com.example.classscheduler.listeners.TimePickerListener;
 
 import java.util.Calendar;
 
+/**
+ * A DialogFragment for displaying a time picker dialog.
+ * Implements the TimePickerDialog.OnTimeSetListener to handle time selection.
+ */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     private TimePickerListener timePickerListener;
 
+    /**
+     * Constructs a TimePickerFragment with the given TimePickerListener.
+     *
+     * @param timePickerListener The listener for time selection.
+     */
     public TimePickerFragment(TimePickerListener timePickerListener) {
         this.timePickerListener = timePickerListener;
     }
@@ -31,8 +39,13 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(getActivity(), this, hour, minute,
-                DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(
+                requireActivity(),
+                this,
+                hour,
+                minute,
+                DateFormat.is24HourFormat(requireContext())
+        );
     }
 
     @Override

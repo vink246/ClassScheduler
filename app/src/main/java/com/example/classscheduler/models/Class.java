@@ -3,7 +3,11 @@ package com.example.classscheduler.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents a class as a Serializable object.
+ */
 public class Class implements Serializable {
+
     private String className;
     private String instructor;
     private String classSection;
@@ -12,6 +16,16 @@ public class Class implements Serializable {
 
     private ArrayList<String> daysOfWeek = new ArrayList<>();
 
+    /**
+     * Constructs a Class object with specified details.
+     *
+     * @param className    The name of the class.
+     * @param instructor   The instructor of the class.
+     * @param classSection The section of the class.
+     * @param classLocation The location of the class.
+     * @param classTime    The time of the class.
+     * @param daysOfWeek   The days of the week the class occurs.
+     */
     public Class(String className, String instructor, String classSection, String classLocation, String classTime, ArrayList<String> daysOfWeek) {
         this.className = className;
         this.instructor = instructor;
@@ -41,9 +55,14 @@ public class Class implements Serializable {
         return classTime;
     }
 
+    /**
+     * Returns the days of the week as a formatted string.
+     *
+     * @return A string representation of the days of the week.
+     */
     public String getDaysOfWeekAsString() {
         StringBuilder selectedDays = new StringBuilder();
-        for (String day: daysOfWeek) {
+        for (String day : daysOfWeek) {
             selectedDays.append(day).append(", ");
         }
         return selectedDays.toString().replaceAll(", $", "");

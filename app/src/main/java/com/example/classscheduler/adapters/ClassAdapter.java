@@ -26,11 +26,20 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+/**
+ * Adapter for displaying classes in a RecyclerView.
+ */
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHolder> {
 
     private List<Class> classList;
     private Context context;
 
+    /**
+     * Constructor for ClassAdapter.
+     *
+     * @param context   The context in which the adapter is created.
+     * @param classList The list of classes to be displayed.
+     */
     public ClassAdapter(Context context, List<Class> classList) {
         this.context = context;
         this.classList = classList;
@@ -48,7 +57,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         Class currentClass = classList.get(position);
 
         // Bind data to the ViewHolder
-        holder.textViewClassName.setText("Class: " + currentClass.getClassName());
+        holder.textViewClassName.setText(currentClass.getClassName());
         holder.textViewInstructor.setText("Instructor: " + currentClass.getInstructor());
         holder.textViewSection.setText("Section: " + currentClass.getClassSection());
         holder.textViewClassLocation.setText("Location: " + currentClass.getClassLocation());
@@ -83,12 +92,20 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         return classList.size();
     }
 
+    /**
+     * Sets the updated list of classes and notifies the adapter.
+     *
+     * @param updatedList The updated list of classes.
+     */
     public void setClassList(List<Class> updatedList) {
         // Update the dataset and notify the adapter
         classList = updatedList;
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder for holding views of individual classes in the RecyclerView.
+     */
     public static class ClassViewHolder extends RecyclerView.ViewHolder {
         TextView textViewClassName;
         TextView textViewInstructor;
@@ -98,6 +115,12 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         TextView textViewDaysOfWeek;
         ImageView imageViewDeleteClass;
         ImageView imageViewEditClass;
+
+        /**
+         * Constructor for ClassViewHolder.
+         *
+         * @param itemView The view item for an individual class.
+         */
         public ClassViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewClassName = itemView.findViewById(R.id.textViewClassName);
@@ -111,9 +134,17 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         }
     }
 
+    /**
+     * ItemDecoration for adding dividers between classes in the RecyclerView.
+     */
     public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
         private Drawable divider;
 
+        /**
+         * Constructor for DividerItemDecoration.
+         *
+         * @param context The context in which the decoration is created.
+         */
         public DividerItemDecoration(Context context) {
             divider = ContextCompat.getDrawable(context, R.drawable.divider);
         }
@@ -135,7 +166,11 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         }
     }
 
-    // Method to handle delete button click
+    /**
+     * Method to handle delete button click.
+     *
+     * @param position The position of the class to be deleted.
+     */
     private void deleteClass(int position) {
         // Handle the action to delete the class at the given position
         classList.remove(position);
@@ -144,6 +179,11 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         notifyDataSetChanged();
     }
 
+    /**
+     * Method to handle edit button click and launch EditClassActivity.
+     *
+     * @param position The position of the class to be edited.
+     */
     private void editClass(int position) {
         Class selectedClass = classList.get(position);
 
@@ -158,6 +198,9 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         context.startActivity(intent);
     }
 
+    /**
+     * Method to save the updated class list to SharedPreferences.
+     */
     private void saveClassesToSharedPreferences() {
         // Convert the updated list to JSON
         Gson gson = new Gson();
@@ -170,6 +213,11 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         editor.apply();
     }
 
+    /**
+     * Method to show a confirmation dialog before deleting a class.
+     *
+     * @param position The position of the class to be deleted.
+     */
     private void showDeleteConfirmationDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Are you sure you want to delete this class?")
@@ -186,5 +234,4 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
                 });
         builder.create().show();
     }
-
 }

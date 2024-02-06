@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class EditClassActivity extends AppCompatActivity implements TimePickerListener{
+/**
+ * Activity for editing details of an existing class.
+ */
+public class EditClassActivity extends AppCompatActivity implements TimePickerListener {
 
     private EditText editTextClassName;
     private EditText editTextInstructor;
@@ -89,19 +92,33 @@ public class EditClassActivity extends AppCompatActivity implements TimePickerLi
         getWindow().setStatusBarColor(android.graphics.Color.parseColor("#673AB7"));
     }
 
-    // Method to handle "Cancel" button click
+    /**
+     * Method to handle "Cancel" button click.
+     *
+     * @param v The View that was clicked.
+     */
     public void cancel(View v) {
         // Handle the action to perform when the "Cancel" button is clicked
         finish(); // This will close the activity and go back
     }
 
-    // Method to show the Time Picker dialog
+    /**
+     * Method to show the Time Picker dialog.
+     *
+     * @param v The View that was clicked.
+     */
     public void showTimePickerDialog(View v) {
         DialogFragment timePickerFragment = new TimePickerFragment(this);
         timePickerFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    // Callback from TimePickerFragment
+    /**
+     * Callback from TimePickerFragment.
+     *
+     * @param view      The TimePicker view.
+     * @param hourOfDay The selected hour of the day.
+     * @param minute    The selected minute.
+     */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Format the selected time and set it to the EditText
         Calendar calendar = Calendar.getInstance();
@@ -114,6 +131,11 @@ public class EditClassActivity extends AppCompatActivity implements TimePickerLi
         editTextClassTime.setText(selectedTime);
     }
 
+    /**
+     * Save the updated class details to SharedPreferences.
+     *
+     * @param position The position of the class in the list.
+     */
     private void saveClassDetails(int position) {
         // Get entered class details
         String className = editTextClassName.getText().toString();
@@ -122,7 +144,7 @@ public class EditClassActivity extends AppCompatActivity implements TimePickerLi
         String classLocation = editTextClassLocation.getText().toString();
         String classTime = editTextClassTime.getText().toString();
 
-        if (className.length()*instructor.length()*classSection.length()*classLocation.length()*classTime.length() == 0) {
+        if (className.length() * instructor.length() * classSection.length() * classLocation.length() * classTime.length() == 0) {
             Context context = getApplicationContext();
             CharSequence text = "Please fill all fields!";
             int duration = Toast.LENGTH_SHORT;
@@ -149,6 +171,12 @@ public class EditClassActivity extends AppCompatActivity implements TimePickerLi
         finish();
     }
 
+    /**
+     * Update the class at the specified position in SharedPreferences.
+     *
+     * @param position     The position of the class in the list.
+     * @param updatedClass The updated Class object.
+     */
     private void updateClassInSharedPreferences(int position, Class updatedClass) {
         // Get the existing classes from SharedPreferences
         SharedPreferences preferences = getSharedPreferences("MyClasses", MODE_PRIVATE);

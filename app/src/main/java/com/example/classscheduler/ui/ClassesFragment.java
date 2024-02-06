@@ -1,34 +1,26 @@
 package com.example.classscheduler.ui;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.classscheduler.AddClassActivity;
 import com.example.classscheduler.R;
 import com.example.classscheduler.adapters.ClassAdapter;
 import com.example.classscheduler.models.Class;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ClassesFragment} factory method to
- * create an instance of this fragment.
+ * A fragment for displaying and managing classes.
  */
 public class ClassesFragment extends Fragment {
 
@@ -76,14 +68,18 @@ public class ClassesFragment extends Fragment {
         classAdapter.notifyDataSetChanged();
     }
 
-    // Custom method to navigate to a new fragment for adding a class
+    /**
+     * Navigates to the fragment for adding a new class.
+     */
     private void navigateToAddClassFragment() {
         // Use NavController to navigate to a new fragment
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.action_classesFragment_to_addClassActivity);
     }
 
-
+    /**
+     * Loads classes from SharedPreferences and updates the adapter dataset.
+     */
     private void loadClassesFromSharedPreferences() {
         // Load existing classes from SharedPreferences
         SharedPreferences preferences = requireActivity().getSharedPreferences("MyClasses", requireActivity().MODE_PRIVATE);

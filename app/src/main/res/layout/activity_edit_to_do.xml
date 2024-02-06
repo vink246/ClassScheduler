@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_edit_to_do.xml -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Spinner for selecting ToDoItem type -->
+    <Spinner
+        android:id="@+id/spinnerItemType"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:popupBackground="@drawable/custom_spinner_dropdown_item" />
+
+    <!-- EditText for entering the name (title) of the ToDoItem -->
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:hint="Title"
+        android:inputType="text" />
+
+    <!-- EditText for entering details of the ToDoItem -->
+    <EditText
+        android:id="@+id/editTextDetails"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:hint="Details"
+        android:inputType="text" />
+
+    <!-- Spinner for selecting associated class -->
+    <Spinner
+        android:id="@+id/spinnerAssociatedClass"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:popupBackground="@drawable/custom_spinner_dropdown_item" />
+
+    <!-- Add this TextView to display the selected due date -->
+    <TextView
+        android:id="@+id/textViewDueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textSize="16sp" />
+
+    <!-- Replace the DatePicker with this Button to open DatePicker dialog -->
+    <Button
+        android:id="@+id/btnOpenDatePicker"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#584A70"
+        android:text="Select Due Date"
+        android:textColor="@color/material_dynamic_neutral80" />
+
+    <!-- Buttons for submit and cancel actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="Submit" />
+
+        <!-- Add some margin between buttons -->
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:backgroundTint="#CCCCCC" />
+    </LinearLayout>
+</LinearLayout>

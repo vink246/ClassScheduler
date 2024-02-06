@@ -1,14 +1,32 @@
 package com.example.classscheduler.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Exam implements ToDoItem {
+/**
+ * Represents an exam as a Serializable object.
+ */
+public class Exam implements ToDoItem, Serializable {
+
     private String title;
     private String details;
     private String associatedClass;
     private Date dueDate;
     private boolean completed;
 
+    // Default constructor
+    public Exam() {
+    }
+
+    /**
+     * Constructs an Exam object with specified details.
+     *
+     * @param title           The title of the exam.
+     * @param details         Details or description of the exam.
+     * @param associatedClass The class associated with the exam.
+     * @param dueDate         The due date of the exam.
+     * @param completed       A boolean indicating whether the exam is completed.
+     */
     public Exam(String title, String details, String associatedClass, Date dueDate, boolean completed) {
         this.title = title;
         this.details = details;
@@ -66,5 +84,9 @@ public class Exam implements ToDoItem {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-}
 
+    @Override
+    public String getType() {
+        return "Exam";
+    }
+}
